@@ -39,7 +39,7 @@ public class ReportController {
     @GetMapping("/{reqId}")
     public ResponseEntity<GeneralResponse> listReportById(@PathVariable String reqId) {
         log.info("Got Request to list one certain report");
-        return ResponseEntity.ok(new GeneralResponse(reportService.getReportById(reqId)));
+        return ResponseEntity.ok(new GeneralResponse(reportService.getReportById(reqId))) ;
     }
 
     @PostMapping("/sync")

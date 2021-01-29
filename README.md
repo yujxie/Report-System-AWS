@@ -2,7 +2,7 @@
 ## Improvement
 0. Add update/delete/selectById report
 1. Use mongoDB for ExcelRepositoryImpl and PDFRepositoryImpl
-2. 
+2. add tests for api in ClientService
 
 ## 3. Make improvement in the code/system level.
 Suggestions:

@@ -35,7 +35,7 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Override
     public InputStream getExcelBodyById(String id) throws FileNotFoundException {
-        Optional<ExcelFile> fileInfo = excelRepository.getFileById(id);
+        Optional<ExcelFile> fileInfo = excelRepository.findById(id);
         return new FileInputStream(fileInfo.orElseThrow(FileNotFoundException::new).getFileLocation());
     }
 
@@ -64,19 +64,19 @@ public class ExcelServiceImpl implements ExcelService {
 //            log.error("Error in generateFile()", e);
             throw new FileGenerationException(e);
         }
-        excelRepository.saveFile(fileInfo);
+        excelRepository.save(fileInfo);
         log.debug("Excel File Generated : {}", fileInfo);
         return fileInfo;
     }
 
     @Override
     public List<ExcelFile> getExcelList() {
-        return excelRepository.getFiles();
+        return excelRepository.findAll();
     }
 
     @Override
     public ExcelFile deleteFile(String id) throws FileNotFoundException {
-        ExcelFile excelFile = excelRepository.deleteFile(id);
+        ExcelFile excelFile = excelRepository.findById(id).orElse(null);
         if (excelFile == null) {
             throw new FileNotFoundException();
         }
