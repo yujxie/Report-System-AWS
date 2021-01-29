@@ -1,8 +1,10 @@
 # Antra SEP java evaluation project
 ## Improvement
 0. Add update/delete/selectById report
-1. Use mongoDB for ExcelRepositoryImpl and PDFRepositoryImpl
-2. add tests for api in ClientService
+1. Use mongoDB for ExcelRepositoryImpl 
+2. Use mongoDB for PDFRepositoryImpl
+3. add tests for api in ClientService
+4. Adding UI with Angular
 
 ## 3. Make improvement in the code/system level.
 Suggestions:
