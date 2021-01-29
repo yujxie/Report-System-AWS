@@ -1,15 +1,8 @@
 # Antra SEP java evaluation project
-## 1. Setup the environment and make it run.
- All three projects are Sprintboot application.<br>
-
- Need to setup AWS SNS/SQS/S3 in order to use the async API.(Videos in LMS)<br>
-
- Make sure to update your <i>application.properties</i> file with your AWS IAM account secrets and region.(Videos in LMS)
-
- AWS Lambda(Sending email) is optional. Code is in [sendEmailCode.py](./lambda/sendEmailCode.py)
-
-## 2. Understand the structure and details
-Look at the [ReportingSystemArchitecture.pdf](./ReportingSystemArchitecture.pdf)
+## Improvement
+0. Add update/delete/selectById report
+1. Use mongoDB for ExcelRepositoryImpl and PDFRepositoryImpl
+2. 
 
 ## 3. Make improvement in the code/system level.
 Suggestions:

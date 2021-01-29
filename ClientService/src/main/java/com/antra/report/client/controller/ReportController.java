@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/report")
 public class ReportController {
     private static final Logger log = LoggerFactory.getLogger(ReportController.class);
 
@@ -29,20 +30,26 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping("/report")
+    @GetMapping()
     public ResponseEntity<GeneralResponse> listReport() {
         log.info("Got Request to list all report");
         return ResponseEntity.ok(new GeneralResponse(reportService.getReportList()));
     }
 
-    @PostMapping("/report/sync")
+    @GetMapping("/{reqId}")
+    public ResponseEntity<GeneralResponse> listReportById(@PathVariable String reqId) {
+        log.info("Got Request to list one certain report");
+        return ResponseEntity.ok(new GeneralResponse(reportService.getReportById(reqId)));
+    }
+
+    @PostMapping("/sync")
     public ResponseEntity<GeneralResponse> createReportDirectly(@RequestBody @Validated ReportRequest request) {
         log.info("Got Request to generate report - sync: {}", request);
         request.setDescription(String.join(" - ", "Sync", request.getDescription()));
         return ResponseEntity.ok(new GeneralResponse(reportService.generateReportsSync(request)));
     }
 
-    @PostMapping("/report/async")
+    @PostMapping("/async")
     public ResponseEntity<GeneralResponse> createReportAsync(@RequestBody @Validated ReportRequest request) {
         log.info("Got Request to generate report - async: {}", request);
         request.setDescription(String.join(" - ", "Async", request.getDescription()));
@@ -50,9 +57,9 @@ public class ReportController {
         return ResponseEntity.ok(new GeneralResponse());
     }
 
-    @GetMapping("/report/content/{reqId}/{type}")
+    @GetMapping("/content/{reqId}/{type}")
     public void downloadFile(@PathVariable String reqId, @PathVariable FileType type, HttpServletResponse response) throws IOException {
-        log.debug("Got Request to Download File - type: {}, reqid: {}", type, reqId);
+        log.debug("Got Request to Download File - type: {}, reqId: {}", type, reqId);
         InputStream fis = reportService.getFileBodyByReqId(reqId, type);
         String fileType = null;
         String fileName = null;
@@ -73,8 +80,18 @@ public class ReportController {
         log.debug("Downloaded File:{}", reqId);
     }
 
-//   @DeleteMapping
-//   @PutMapping
+   @DeleteMapping("/content/{reqId}")
+   public ResponseEntity<GeneralResponse> deleteFile(@PathVariable String reqId){
+        log.debug("Del Request to delete file and file record - reqId: {}", reqId);
+        reportService.deleteReport(reqId);
+        return ResponseEntity.ok(new GeneralResponse(String.format("File %s is deleted successfully!", reqId)));
+   }
+
+   @PutMapping("/content/{reqId}")
+   public ResponseEntity<GeneralResponse> updateFile(@PathVariable String reqId, @RequestBody @Validated ReportRequest request){
+        log.debug("Put Request to update file and file record - reqId: {}", reqId);
+        return ResponseEntity.ok(new GeneralResponse(reportService.updateReportById(reqId, request)));
+   }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<GeneralResponse> handleValidationException(MethodArgumentNotValidException e) {

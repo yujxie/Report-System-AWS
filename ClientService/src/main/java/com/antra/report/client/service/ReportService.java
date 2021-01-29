@@ -13,11 +13,17 @@ public interface ReportService {
 
     ReportVO generateReportsAsync(ReportRequest request);
 
+    ReportVO updateReportById(String reqId, ReportRequest request);
+
+    void deleteReport(String reqId);
+
     void updateAsyncPDFReport(SqsResponse response);
 
     void updateAsyncExcelReport(SqsResponse response);
 
     List<ReportVO> getReportList();
+
+    ReportVO getReportById(String reqId);
 
     InputStream getFileBodyByReqId(String reqId, FileType type);
 }

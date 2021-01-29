@@ -14,6 +14,7 @@ import com.antra.report.client.pojo.reponse.ReportVO;
 import com.antra.report.client.pojo.reponse.SqsResponse;
 import com.antra.report.client.pojo.request.ReportRequest;
 import com.antra.report.client.repository.ReportRequestRepo;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -193,5 +194,32 @@ public class ReportServiceImpl implements ReportService {
             }
         }
         return null;
+    }
+
+    // Only delete file record in JPA repository
+    // TODO: 1/28/2021 need to delete related files in AWS s3
+    @Override
+    public void deleteReport(String reqId){
+        reportRequestRepo.deleteById(reqId);
+    }
+
+    @Override
+    public ReportVO updateReportById(String reqId, ReportRequest request){
+        ReportRequestEntity updateEntity = reportRequestRepo.findById(reqId).orElseThrow(RequestNotFoundException::new);
+        updateEntity.setUpdatedTime(LocalDateTime.now());
+        updateEntity.setSubmitter(request.getSubmitter());
+        updateEntity.setDescription(request.getDescription());
+        request.setReqId(reqId);
+        // update Excel Entity
+
+        // update PDF Entity
+
+        reportRequestRepo.save(updateEntity);
+        return new ReportVO(reportRequestRepo.findById(request.getReqId()).orElseThrow(RequestNotFoundException::new));
+    }
+
+    @Override
+    public ReportVO getReportById(String reqId){
+        return new ReportVO(reportRequestRepo.findById(reqId).orElseThrow(RequestNotFoundException::new));
     }
 }
